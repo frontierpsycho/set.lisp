@@ -28,9 +28,46 @@
     #'(lambda (card) (getf card attribute))
     (list card1 card2)))
 
+;; not really needed but at least it works!
+(defmacro extract-number (card1 card2)
+  (list 'extract-attribute card1 card2 :number))
+
+;; TODO no need for 4 separate extract & extrapolate functions
+
+(defun extract-number-fun (card1 card2)
+  (extract-attribute card1 card2 :number))
+
+(defun extract-shading-fun (card1 card2)
+  (extract-attribute card1 card2 :shading))
+
+(defun extract-colour-fun (card1 card2)
+  (extract-attribute card1 card2 :colour))
+
+(defun extract-shape-fun (card1 card2)
+  (extract-attribute card1 card2 :shape))
+
 ;; get difference of global var and that list
 (defun extrapolate-number (card1 card2)
-  (car (set-difference *numbers* (extract-attribute card1 card2 :number))))
+  (car (set-difference *numbers* (extract-number-fun card1 card2))))
+
+(defun extrapolate-shading (card1 card2)
+  (car (set-difference *shadings* (extract-shading-fun card1 card2))))
+
+(defun extrapolate-colour (card1 card2)
+  (car (set-difference *colours* (extract-colour-fun card1 card2))))
+
+(defun extrapolate-shape (card1 card2)
+  (car (set-difference *shapes* (extract-shape-fun card1 card2))))
+
+(defun extrapolate-card (card1 card2)
+  (make-card
+      (extrapolate-number card1 card2)
+      (extrapolate-shading card1 card2)
+      (extrapolate-colour card1 card2)
+      (extrapolate-shape card1 card2)))
+
+(defmacro extrapolate-attribute (card1 card2 attribute)
+  (list `(car (set-difference ,(format NIL "*~(~a~)s*" attribute) (extract-attribute card1 card2 attribute)))))
 
 ;; collect attributes
 
@@ -39,7 +76,7 @@
       (card2 (make-card (nth 0 *numbers*) (nth 1 *shadings*) (nth 1 *colours*) (nth 2 *shapes*)))
       (card3 (make-card (nth 2 *numbers*) (nth 1 *shadings*) (nth 2 *colours*) (nth 1 *shapes*)))
       (card4 (apply #'make-card '(one outlined purple oval))))
-  ;; (dolist (card (sort-cards (list card1 card2 card3 card4)))
-  ;;  (print-card card))
-  (format t "~a" (extrapolate-number card1 card2))
-  )
+  (format
+    t
+    "~a"
+    (extrapolate-card card1 card2)))
