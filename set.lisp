@@ -27,15 +27,15 @@
     (list card1 card2)))
 
 ;; get difference of global var and that list
-(defun extrapolate (list attribute card1 card2)
-  (car (set-difference list (extract-attribute card1 card2 attribute))))
+(defun extrapolate (card1 card2)
+  (lambda (list attribute)
+   (car (set-difference list (extract-attribute card1 card2 attribute)))))
 
 (defun extrapolate-card (card1 card2)
   (apply
    #'make-card
    (mapcar
-    (lambda (list attribute)
-      (extrapolate list attribute card1 card2))
+    (extrapolate card1 card2)
     (list *numbers* *shadings* *colours* *shapes*)
     (list :number :shading :colour :shape))))
 
