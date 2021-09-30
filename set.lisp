@@ -31,11 +31,13 @@
   (car (set-difference list (extract-attribute card1 card2 attribute))))
 
 (defun extrapolate-card (card1 card2)
-  (make-card
-      (extrapolate *numbers* :number card1 card2)
-      (extrapolate *shadings* :shading card1 card2)
-      (extrapolate *colours* :colour card1 card2)
-      (extrapolate *shapes* :shape card1 card2)))
+  (apply
+   #'make-card
+   (mapcar
+    (lambda (list attribute)
+      (extrapolate list attribute card1 card2))
+    (list *numbers* *shadings* *colours* *shapes*)
+    (list :number :shading :colour :shape))))
 
 ;;; Use all of the above
 
