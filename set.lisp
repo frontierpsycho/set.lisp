@@ -26,32 +26,20 @@
     #'(lambda (card) (getf card attribute))
     (list card1 card2)))
 
-;; TODO no need for 4 separate extract & extrapolate functions
-
-(defun extract-number-fun (card1 card2)
-  (extract-attribute card1 card2 :number))
-
-(defun extract-shading-fun (card1 card2)
-  (extract-attribute card1 card2 :shading))
-
-(defun extract-colour-fun (card1 card2)
-  (extract-attribute card1 card2 :colour))
-
-(defun extract-shape-fun (card1 card2)
-  (extract-attribute card1 card2 :shape))
+;; TODO no need for four separate extrapolate functions
 
 ;; get difference of global var and that list
 (defun extrapolate-number (card1 card2)
-  (car (set-difference *numbers* (extract-number-fun card1 card2))))
+  (car (set-difference *numbers* (extract-attribute card1 card2 :number))))
 
 (defun extrapolate-shading (card1 card2)
-  (car (set-difference *shadings* (extract-shading-fun card1 card2))))
+  (car (set-difference *shadings* (extract-attribute card1 card2 :shading))))
 
 (defun extrapolate-colour (card1 card2)
-  (car (set-difference *colours* (extract-colour-fun card1 card2))))
+  (car (set-difference *colours* (extract-attribute card1 card2 :colour))))
 
 (defun extrapolate-shape (card1 card2)
-  (car (set-difference *shapes* (extract-shape-fun card1 card2))))
+  (car (set-difference *shapes* (extract-attribute card1 card2 :shape))))
 
 (defun extrapolate-card (card1 card2)
   (make-card
