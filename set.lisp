@@ -26,10 +26,6 @@
     #'(lambda (card) (getf card attribute))
     (list card1 card2)))
 
-;; not really needed but at least it works!
-(defmacro extract-number (card1 card2)
-  (list 'extract-attribute card1 card2 :number))
-
 ;; TODO no need for 4 separate extract & extrapolate functions
 
 (defun extract-number-fun (card1 card2)
@@ -63,9 +59,6 @@
       (extrapolate-shading card1 card2)
       (extrapolate-colour card1 card2)
       (extrapolate-shape card1 card2)))
-
-(defmacro extrapolate-attribute (card1 card2 attribute)
-  (list `(car (set-difference ,(format NIL "*~(~a~)s*" attribute) (extract-attribute card1 card2 attribute)))))
 
 ;;; Use all of the above
 
