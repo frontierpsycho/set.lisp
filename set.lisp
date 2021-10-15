@@ -26,46 +26,18 @@
     #'(lambda (card) (getf card attribute))
     (list card1 card2)))
 
-;; not really needed but at least it works!
-(defmacro extract-number (card1 card2)
-  (list 'extract-attribute card1 card2 :number))
-
-;; TODO no need for 4 separate extract & extrapolate functions
-
-(defun extract-number-fun (card1 card2)
-  (extract-attribute card1 card2 :number))
-
-(defun extract-shading-fun (card1 card2)
-  (extract-attribute card1 card2 :shading))
-
-(defun extract-colour-fun (card1 card2)
-  (extract-attribute card1 card2 :colour))
-
-(defun extract-shape-fun (card1 card2)
-  (extract-attribute card1 card2 :shape))
-
 ;; get difference of global var and that list
-(defun extrapolate-number (card1 card2)
-  (car (set-difference *numbers* (extract-number-fun card1 card2))))
-
-(defun extrapolate-shading (card1 card2)
-  (car (set-difference *shadings* (extract-shading-fun card1 card2))))
-
-(defun extrapolate-colour (card1 card2)
-  (car (set-difference *colours* (extract-colour-fun card1 card2))))
-
-(defun extrapolate-shape (card1 card2)
-  (car (set-difference *shapes* (extract-shape-fun card1 card2))))
+(defun extrapolate (card1 card2)
+  (lambda (list attribute)
+   (car (set-difference list (extract-attribute card1 card2 attribute)))))
 
 (defun extrapolate-card (card1 card2)
-  (make-card
-      (extrapolate-number card1 card2)
-      (extrapolate-shading card1 card2)
-      (extrapolate-colour card1 card2)
-      (extrapolate-shape card1 card2)))
-
-(defmacro extrapolate-attribute (card1 card2 attribute)
-  (list `(car (set-difference ,(format NIL "*~(~a~)s*" attribute) (extract-attribute card1 card2 attribute)))))
+  (apply
+   #'make-card
+   (mapcar
+    (extrapolate card1 card2)
+    (list *numbers* *shadings* *colours* *shapes*)
+    (list :number :shading :colour :shape))))
 
 ;;; Use all of the above
 
